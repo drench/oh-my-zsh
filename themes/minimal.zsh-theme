@@ -1,6 +1,5 @@
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$reset_color%}%{$fg[white]%}["
 ZSH_THEME_GIT_PROMPT_SUFFIX="]%{$reset_color%}"
-# ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%}●%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%}*%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_CLEAN=""
 
@@ -12,7 +11,4 @@ git_custom_status() {
   fi
 }
 
-
-# PROMPT='%2~ $(git_custom_status) »%b '
-PROMPT='erik@MPB %2~ $(git_custom_status) >>%b '
-#RPROMPT='$(git_custom_status)'
+PROMPT='%n@%m %2~ $(git_custom_status) >>%b '
