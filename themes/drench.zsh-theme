@@ -21,7 +21,7 @@
 
 # The prompt
 
-PROMPT='%{$fg[yellow]%}➜ %n@%m:%{$fg[blue]%}%6~
+PROMPT='%{$fg[yellow]%}➜ %n@%m:%{$fg_bold[blue]%}%6~
 %{$fg[magenta]%}%# %{$reset_color%}'
 
 # The right-hand prompt
