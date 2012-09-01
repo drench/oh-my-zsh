@@ -1,3 +1,4 @@
+# vim: set ft=zsh :
 # On a mac with snow leopard, for nicer terminal colours:
 
 # - Install SIMBL: http://www.culater.net/software/SIMBL/SIMBL.php
@@ -26,23 +27,58 @@ PROMPT='%{$fg[yellow]%}➜ %n@%m:%{$fg_bold[blue]%}%6~
 
 # The right-hand prompt
 
-RPROMPT='%{$reset_color%}$(git_prompt_info)$(git_prompt_status)%{$reset_color%}]'
+RPROMPT='$(drench_git_prompt)'
 
 # Add this at the start of RPROMPT to include rvm info showing ruby-version@gemset-name
 # %{$fg[yellow]%}$(~/.rvm/bin/rvm-prompt)%{$reset_color%} 
 
 # local time, color coded by last return code
 
-ZSH_THEME_GIT_PROMPT_PREFIX="[%{$fg[magenta]%}git:%{$fg[green]%}"
-ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%} x"
-ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[cyan]%} @"
-ZSH_THEME_GIT_PROMPT_UNMERGED="%{$fg[red]%} m"
-ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg[green]%} u"
-ZSH_THEME_GIT_PROMPT_SUFFIX=""
-ZSH_THEME_GIT_PROMPT_ADDED="%{$fg[cyan]%} +"
-ZSH_THEME_GIT_PROMPT_MODIFIED="%{$fg[yellow]%} /"
-ZSH_THEME_GIT_PROMPT_DELETED="%{$fg[red]%} X"
-ZSH_THEME_GIT_PROMPT_RENAMED="%{$fg[blue]%} >"
+function drench_git_prompt() {
+    ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+    ndx=$(git status --porcelain --ignore-submodules=dirty 2> /dev/null)
+    sts=" "
+    if   $(echo "$ndx" | grep '^?? ' &> /dev/null); then
+        sts="$sts%{$fg[green]%}u%{$reset_color%}"
+    fi
+    if $(echo "$ndx" | grep '^A  ' &> /dev/null); then
+        sts="$sts%{$fg[cyan]%}+%{$reset_color%}"
+    fi
+    if $(echo "$ndx" | grep '^M  ' &> /dev/null); then
+        sts="$sts%{$fg[cyan]%}+%{$reset_color%}"
+    fi
+    if $(echo "$ndx" | grep '^ M ' &> /dev/null); then
+        sts="$sts%{$fg[yellow]%}/"
+    fi
+    if $(echo "$ndx" | grep '^AM ' &> /dev/null); then
+        sts="$sts%{$fg[yellow]%}/"
+    fi
+    if $(echo "$ndx" | grep '^ T ' &> /dev/null); then
+        sts="$sts%{$fg[yellow]%}/"
+    fi
+    if $(echo "$ndx" | grep '^R  ' &> /dev/null); then
+        sts="$sts%{$fg_bold[blue]%}>"
+    fi
+    if $(echo "$ndx" | grep '^ D ' &> /dev/null); then
+        sts="$sts%{$fg[red]%}X"
+    fi
+    if $(echo "$ndx" | grep '^AD ' &> /dev/null); then
+        sts="$sts%{$fg[red]%}X"
+    fi
+    if $(echo "$ndx" | grep '^UU ' &> /dev/null); then
+        sts="$sts%{$fg[red]%}!"
+    fi
+    if [ "$sts" = " " ]; then
+        sts=""
+    fi
+    git_dir=`git rev-parse --git-dir`
+    if [ -d `git rev-parse --git-dir`/svn ]; then
+        git_type="git-svn"
+    else
+        git_type="git"
+    fi
+    echo "[%{$fg[red]%}$git_type:%{$fg_bold[magenta]%}${ref#refs/heads/}$sts%{$reset_color%}]"
+}
 
 # Determine if we are using a gemset.
 function rvm_gemset() {
