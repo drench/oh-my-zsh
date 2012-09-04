@@ -39,7 +39,7 @@ function drench_git_prompt() {
     ndx=$(git status --porcelain --ignore-submodules=dirty 2> /dev/null)
     sts=" "
     if   $(echo "$ndx" | grep '^?? ' &> /dev/null); then
-        sts="$sts%{$fg[green]%}u%{$reset_color%}"
+        sts="$sts%{$fg[magenta]%}u%{$reset_color%}"
     fi
     if $(echo "$ndx" | grep '^A  ' &> /dev/null); then
         sts="$sts%{$fg[cyan]%}+%{$reset_color%}"
@@ -77,7 +77,7 @@ function drench_git_prompt() {
     else
         git_type="git"
     fi
-    echo "[%{$fg[red]%}$git_type:%{$fg_bold[magenta]%}${ref#refs/heads/}$sts%{$reset_color%}]"
+    echo "[%{$fg[red]%}$git_type:%{$fg[green]%}${ref#refs/heads/}$sts%{$reset_color%}]"
 }
 
 # Determine if we are using a gemset.
