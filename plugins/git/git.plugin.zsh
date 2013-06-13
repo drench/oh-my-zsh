@@ -68,7 +68,13 @@ alias gpoat='git push origin --all && git push origin --tags'
 
 # Will cd into the top of the current repository
 # or submodule.
-alias grt='cd $(git rev-parse --show-toplevel || echo ".")'
+function grt() {
+  if [ "$(git rev-parse --is-inside-git-dir)" = "true" ]; then
+    cd $(git rev-parse --git-dir)/..
+  else
+    cd $(git rev-parse --show-toplevel || echo ".")
+  fi
+}
 
 # Git and svn mix
 alias git-svn-dcommit-push='git svn dcommit && git push github master:svntrunk'
