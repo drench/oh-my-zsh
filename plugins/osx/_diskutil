@@ -1,0 +1,63 @@
+#compdef diskutil
+
+_diskutil() {
+  local -a _1st_arguments
+  _1st_arguments=(
+    "list:List disks"
+    "info:Get detailed information about a specific whole disk or partition"
+    "information:Get detailed information about a specific whole disk or partition"
+    "activity:Continuously display system-wide disk manipulation activity"
+    "listFilesystems:Show the file system personalities available for formatting"
+    "umount:Unmount a single volume"
+    "unmount:Unmount a single volume"
+    "umountDisk:Unmount an entire disk (all volumes)"
+    "unmountDisk:Unmount an entire disk (all volumes)"
+    "eject:Eject a disk"
+    "mount:Mount a single volume"
+    "mountDisk:Mount an entire disk (all mountable volumes)"
+    "rename:Rename a volume"
+    "renameVolume:Rename a volume"
+    "enableJournal:Enable journaling on an HFS+ volume"
+    "disableJournal:Disable journaling on an HFS+ volume"
+    "moveJournal:Move a journal"
+    "enableOwnership:Enable ownership of a volume"
+    "disableOwnership:Disable ownership of a volume"
+    "verifyVolume:Verify the file system data structures of a volume"
+    "repairVolume:Repair the file system data structures of a volume"
+    "verifyDisk:Verify the partition map layout of a disk"
+    "repairDisk:Repair the partition map layout of a disk"
+    "verifyPermissions:Verify the permissions of a boot volume"
+    "repairPermissions:Repair the permissions of a boot volume"
+    "eraseDisk:Erase a disk"
+    "eraseVolume:Erase a volume"
+    "reformat:Erase an existing volume"
+    "eraseOptical:Erase optical media"
+    "zeroDisk:Erase a disk writing zeroes to the media"
+    "randomDisk:Erase a disk writing random data to the media"
+    "secureErase:Securely erase a disk or its free space"
+    "partitionDisk:Partition a disk, removing all volumes"
+    "resizeVolume:Non-destructively resize a volume"
+    "splitPartition:Destructively split a volume"
+    "mergePartitions:Merge two or more partitions"
+    "appleRAID:Create, manipulate or destroy AppleRAID volumes"
+    "ar:Create, manipulate or destroy AppleRAID volumes"
+    "coreStorage:Create, manipulate, or destroy CoreStorage volumes"
+    "cs:Create, manipulate, or destroy CoreStorage volumes"
+  )
+
+  if (( CURRENT == 2 )); then
+    _describe -t commands "diskutil subcommands" _1st_arguments
+    return
+  fi
+
+  case "$words[2]" in
+    eject|mountDisk|enableJournal|enableOwnership|disableOwnership|verifyVolume|repairVolume|verifyDisk|repairDisk|reformat|zeroDisk|partitionDisk|resizeVolume|splitPartition)
+      compadd $(diskutil list | grep '^/dev/disk')
+      ;;
+    *)
+      _message 'TBD'
+      ;;
+  esac
+}
+
+_diskutil "$@"
