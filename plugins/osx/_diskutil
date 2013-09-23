@@ -45,6 +45,11 @@ _diskutil() {
     "cs:Create, manipulate, or destroy CoreStorage volumes"
   )
 
+  local -A _plist_option
+  _plist_option=(
+    -plist "-plist[display output in plist format]"
+  )
+
   if (( CURRENT == 2 )); then
     _describe -t commands "diskutil subcommands" _1st_arguments
     return
@@ -53,6 +58,9 @@ _diskutil() {
   case "$words[2]" in
     eject|mountDisk|enableJournal|enableOwnership|disableOwnership|verifyVolume|repairVolume|verifyDisk|repairDisk|reformat|zeroDisk|partitionDisk|resizeVolume|splitPartition)
       compadd $(diskutil list | grep '^/dev/disk')
+      ;;
+    list|info|information|listFilesystems|verifyPermissions|repairPermissions)
+      _arguments $_plist_option && return 0
       ;;
     *)
       _message 'TBD'
