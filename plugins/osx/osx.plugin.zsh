@@ -157,3 +157,5 @@ function trash() {
 function vncviewer() {
   open vnc://$@
 }
+
+alias airport="/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport"
