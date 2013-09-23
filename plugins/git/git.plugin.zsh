@@ -86,7 +86,7 @@ alias gsts='git stash show --text'
 # or submodule.
 function grt() {
   if [ "$(git rev-parse --is-inside-git-dir)" = "true" ]; then
-    cd $(git rev-parse --git-dir)/..
+    cd ${$(git rev-parse --git-dir)%.git}
   else
     cd $(git rev-parse --show-toplevel || echo ".")
   fi
