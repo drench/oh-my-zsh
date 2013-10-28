@@ -80,14 +80,6 @@ function drench_git_prompt() {
     echo "[%{$fg[red]%}$git_type:%{$fg[green]%}${ref#refs/heads/}$sts%{$reset_color%}]"
 }
 
-# Determine if we are using a gemset.
-function rvm_gemset() {
-    GEMSET=`rvm gemset list | grep '=>' | cut -b4-`
-    if [[ -n $GEMSET ]]; then
-        echo "%{$fg[yellow]%}$GEMSET%{$reset_color%}|"
-    fi 
-}
-
 # Determine the time since last commit. If branch is clean,
 # use a neutral color, otherwise colors will vary according to time.
 function git_time_since_commit() {
@@ -121,15 +113,15 @@ function git_time_since_commit() {
             fi
 
             if [ "$HOURS" -gt 24 ]; then
-                echo "($(rvm_gemset)$COLOR${DAYS}d${SUB_HOURS}h${SUB_MINUTES}m%{$reset_color%}|"
+                echo "($COLOR${DAYS}d${SUB_HOURS}h${SUB_MINUTES}m%{$reset_color%}|"
             elif [ "$MINUTES" -gt 60 ]; then
-                echo "($(rvm_gemset)$COLOR${HOURS}h${SUB_MINUTES}m%{$reset_color%}|"
+                echo "($COLOR${HOURS}h${SUB_MINUTES}m%{$reset_color%}|"
             else
-                echo "($(rvm_gemset)$COLOR${MINUTES}m%{$reset_color%}|"
+                echo "($COLOR${MINUTES}m%{$reset_color%}|"
             fi
         else
             COLOR="$ZSH_THEME_GIT_TIME_SINCE_COMMIT_NEUTRAL"
-            echo "($(rvm_gemset)$COLOR~|"
+            echo "($COLOR~|"
         fi
     fi
 }
