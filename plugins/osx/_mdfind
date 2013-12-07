@@ -1,0 +1,15 @@
+#compdef mdfind
+
+local arguments
+
+arguments=(
+  '-live[Query should stay active]'
+  '-count[Query only reports matching items count]'
+  '-onlyin[Search only within given directory]'
+  '-name[Search on file name only]'
+  '-s[Show contents of smart folder <name>]'
+  '-0[Use NUL (\0) as a path separator, for use with xargs -0.]'
+  '*:files:_files'
+)
+
+_arguments -s $arguments
