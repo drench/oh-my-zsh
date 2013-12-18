@@ -1,0 +1,3 @@
+#compdef pcd
+
+[ -d ~/.pow ] && compadd $(cd ~/.pow; echo *(@))
