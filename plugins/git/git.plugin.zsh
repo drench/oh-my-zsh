@@ -93,13 +93,7 @@ alias gstd='git stash drop'
 
 # Will cd into the top of the current repository
 # or submodule.
-function grt() {
-  if [ "$(git rev-parse --is-inside-git-dir)" = "true" ]; then
-    cd ${$(git rev-parse --git-dir)%.git}
-  else
-    cd $(git rev-parse --show-toplevel || echo ".")
-  fi
-}
+alias grt='[ $(git rev-parse --is-inside-git-dir) = "true" ] && cd ${$(git rev-parse --git-dir)%.git} || cd $(git rev-parse --show-toplevel || echo ".")'
 
 # Git and svn mix
 alias git-svn-dcommit-push='git svn dcommit && git push github master:svntrunk'
