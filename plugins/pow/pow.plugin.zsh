@@ -64,3 +64,5 @@ powit(){
 
 # View the standard out (puts) from any pow app
 alias kaput="tail -f ~/Library/Logs/Pow/apps/*"
+
+pcd() { cd $(readlink ~/.pow/$1) }
