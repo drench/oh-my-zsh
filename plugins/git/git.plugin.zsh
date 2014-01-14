@@ -91,9 +91,21 @@ alias gsta='git stash'
 alias gstp='git stash pop'
 alias gstd='git stash drop'
 
+function is_git_repo() {
+  git rev-parse --is-inside-git-dir 2> /dev/null > /dev/null
+}
+
+function git_dir() {
+  if [ $(git rev-parse --is-inside-git-dir) = "true" ]; then
+    echo ${$(git rev-parse --git-dir)%.git}
+  else
+    git rev-parse --show-toplevel || echo "."
+  fi
+}
+
 # Will cd into the top of the current repository
 # or submodule.
-alias grt='[ $(git rev-parse --is-inside-git-dir) = "true" ] && cd ${$(git rev-parse --git-dir)%.git} || cd $(git rev-parse --show-toplevel || echo ".")'
+alias grt='is_git_repo && cd $(git_dir)'
 
 # Git and svn mix
 alias git-svn-dcommit-push='git svn dcommit && git push github master:svntrunk'
