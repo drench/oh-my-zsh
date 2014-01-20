@@ -1,10 +1,16 @@
 #compdef pcd
 
-if [ -d ~/.pow ]; then
-  local args
-  args=()
+_pcd() {
+  test "$CURRENT" = 2 || return
+  test -d ~/.pow || return
+
+  local _pcd_args
+  _pcd_args=()
   (cd ~/.pow; stat -f '%N:%Y' *(@)) | while read pow_project; do
-    args+=${pow_project/$HOME/\~}
+    _pcd_args+=${pow_project/$HOME/\~}
   done
-  _describe -t args "pcd arguments" args
-fi
+
+  _describe -t args "pcd arguments" _pcd_args
+}
+
+_pcd "$@"
