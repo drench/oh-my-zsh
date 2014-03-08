@@ -1,0 +1,7 @@
+#compdef git-packrat "git packrat"
+
+_git-packrat() {
+  compadd $(git branch --list | grep -v '^* ' | cut -c3-)
+}
+
+_git-packrat "$@"
