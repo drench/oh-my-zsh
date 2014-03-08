@@ -1,0 +1,16 @@
+#compdef afplay
+
+local arguments
+
+arguments=(
+  '(-v --volume)'{-v,--volume}'[set the volume for playback of the file]' # TK number
+  #'(-h --help)'{-h --help}'[print help]'
+  #'--leaks[run leaks analysis]'
+  #'(-t --time)'{-t --time}'[play for TIME seconds]' # TK add TIME
+  #'(-r --rate)'{-r --rate}'[play at playback rate]' # TK add RATE
+  #'(-q --rQuality)'{-q --rQuality}'[set the quality used for rate-scaled playback (default is 0 - low quality, 1 - high quality)]' # TK add QUALITY
+  #'(-d --debug)'{-d --debug}'[print debug output]'
+  '*:files:_files'
+)
+
+_arguments -s $arguments
