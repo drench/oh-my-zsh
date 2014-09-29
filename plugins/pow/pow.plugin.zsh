@@ -84,4 +84,13 @@ repow(){
 # View the standard out (puts) from any pow app
 alias kaput="tail -f ~/Library/Logs/Pow/apps/*"
 
-pcd() { cd $(readlink ~/.pow/$1) }
+pcd() {
+  local powlink=~/.pow/$1
+
+  if [ -x "$powlink" ]; then
+    cd $(readlink $powlink)
+  else
+    echo "pcd $1: not powified" > /dev/stderr
+    return 111
+  fi
+}
