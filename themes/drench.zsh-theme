@@ -35,7 +35,7 @@ RPROMPT='$(drench_git_prompt)'
 # local time, color coded by last return code
 
 function drench_git_prompt() {
-    ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+    current_branch=$(git symbolic-ref --short HEAD 2> /dev/null) || return
     ndx=$(git status --porcelain --ignore-submodules=dirty 2> /dev/null)
     sts=" "
     if   $(echo "$ndx" | grep '^?? ' &> /dev/null); then
@@ -77,7 +77,7 @@ function drench_git_prompt() {
     else
         git_type="git"
     fi
-    echo "[%{$fg[red]%}$git_type:%{$fg[green]%}${ref#refs/heads/}$sts%{$reset_color%}]"
+    echo "[%{$fg[red]%}$git_type:%{$fg[green]%}${current_branch}$sts%{$reset_color%}]"
 }
 
 # Determine the time since last commit. If branch is clean,
