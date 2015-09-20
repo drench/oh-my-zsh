@@ -1,4 +1,5 @@
-function zle-line-init zle-keymap-select {
+# Updates editor information when the keymap changes.
+function zle-keymap-select() {
   zle reset-prompt
 }
 
