@@ -34,43 +34,56 @@ RPROMPT='$(drench_git_prompt)'
 
 # local time, color coded by last return code
 
+raw_git_statuses() {
+  git status --porcelain --ignore-submodules=dirty | cut -c1-3 | sort | uniq
+}
+
 function drench_git_prompt() {
     current_branch=$(git symbolic-ref --short HEAD 2> /dev/null) || return
-    ndx=$(git status --porcelain --ignore-submodules=dirty 2> /dev/null)
-    sts=" "
-    if   $(echo "$ndx" | grep '^?? ' &> /dev/null); then
-        sts="$sts%{$fg[magenta]%}u%{$reset_color%}"
+
+    IFS=$'\n'
+    raw_statuses=($(raw_git_statuses))
+    for raw_status in $raw_statuses; do
+      case "$raw_status" in
+        '?? ')
+          statuses=($statuses "%{$fg[magenta]%}u%{$reset_color%}")
+          ;;
+        'A  ')
+          statuses=($statuses "%{$fg[cyan]%}+%{$reset_color%}")
+          ;;
+        'M  ')
+          statuses=($statuses "%{$fg[cyan]%}+%{$reset_color%}")
+          ;;
+        ' M ')
+          statuses=($statuses "%{$fg[yellow]%}/")
+          ;;
+        'AM ')
+          statuses=($statuses "%{$fg[yellow]%}/")
+          ;;
+        ' T ')
+          statuses=($statuses "%{$fg[yellow]%}/")
+          ;;
+        'R  ')
+          statuses=($statuses "%{$fg_bold[blue]%}>")
+          ;;
+        ' D ')
+          statuses=($statuses "%{$fg[red]%}X")
+          ;;
+        'AD ')
+          statuses=($statuses "%{$fg[red]%}X")
+          ;;
+        'UU ')
+          statuses=($statuses "%{$fg[red]%}!")
+          ;;
+      esac
+    done
+
+    if [ $#statuses -eq 0 ]; then
+      sts=""
+    else
+      sts=" ${(j::)statuses}"
     fi
-    if $(echo "$ndx" | grep '^A  ' &> /dev/null); then
-        sts="$sts%{$fg[cyan]%}+%{$reset_color%}"
-    fi
-    if $(echo "$ndx" | grep '^M  ' &> /dev/null); then
-        sts="$sts%{$fg[cyan]%}+%{$reset_color%}"
-    fi
-    if $(echo "$ndx" | grep '^ M ' &> /dev/null); then
-        sts="$sts%{$fg[yellow]%}/"
-    fi
-    if $(echo "$ndx" | grep '^AM ' &> /dev/null); then
-        sts="$sts%{$fg[yellow]%}/"
-    fi
-    if $(echo "$ndx" | grep '^ T ' &> /dev/null); then
-        sts="$sts%{$fg[yellow]%}/"
-    fi
-    if $(echo "$ndx" | grep '^R  ' &> /dev/null); then
-        sts="$sts%{$fg_bold[blue]%}>"
-    fi
-    if $(echo "$ndx" | grep '^ D ' &> /dev/null); then
-        sts="$sts%{$fg[red]%}X"
-    fi
-    if $(echo "$ndx" | grep '^AD ' &> /dev/null); then
-        sts="$sts%{$fg[red]%}X"
-    fi
-    if $(echo "$ndx" | grep '^UU ' &> /dev/null); then
-        sts="$sts%{$fg[red]%}!"
-    fi
-    if [ "$sts" = " " ]; then
-        sts=""
-    fi
+
     git_dir=$(git rev-parse --git-dir)
     if [ -d "${git_dir}/svn" ]; then
         git_type="git-svn"
