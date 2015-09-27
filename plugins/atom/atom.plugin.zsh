@@ -1,7 +1,6 @@
 case $OSTYPE in
 darwin*)
     local _atom_paths > /dev/null 2>&1
-
     _atom_paths=(
         "$HOME/Applications/Atom.app"
         "/Applications/Atom.app"
