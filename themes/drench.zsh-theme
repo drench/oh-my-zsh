@@ -71,8 +71,8 @@ function drench_git_prompt() {
     if [ "$sts" = " " ]; then
         sts=""
     fi
-    git_dir=`git rev-parse --git-dir`
-    if [ -d `git rev-parse --git-dir`/svn ]; then
+    git_dir=$(git rev-parse --git-dir)
+    if [ -d "${git_dir}/svn" ]; then
         git_type="git-svn"
     else
         git_type="git"
