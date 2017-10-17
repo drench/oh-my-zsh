@@ -35,7 +35,10 @@ RPROMPT='$(drench_git_prompt)'
 # local time, color coded by last return code
 
 raw_git_statuses() {
-  git status --porcelain --ignore-submodules=dirty | cut -c1-3 | sort | uniq
+  (grt && git status --porcelain --ignore-submodules=dirty) |
+  cut -c1-3 |
+  sort |
+  uniq
 }
 
 function drench_git_prompt() {
