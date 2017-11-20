@@ -42,7 +42,15 @@ raw_git_statuses() {
 }
 
 function drench_git_prompt() {
-    current_branch=$(git symbolic-ref --short HEAD 2> /dev/null) || return
+    current_branch=$(git symbolic-ref --short HEAD 2> /dev/null)
+
+    if [ -z "$current_branch" ]; then
+      # Probably detached HEAD; try to get the remote branch name
+      desc=$(git describe --all --exact-match 2> /dev/null)
+      current_branch=${desc#remotes/}
+    fi
+
+    test -z "$current_branch" && return
 
     IFS=$'\n'
     raw_statuses=($(raw_git_statuses))
