@@ -35,7 +35,9 @@ RPROMPT='$(drench_git_prompt)'
 # local time, color coded by last return code
 
 raw_git_statuses() {
-  (grt && git status --porcelain --ignore-submodules=dirty) |
+  root_dir=$(git_root_dir)
+  test $? -eq 0 || return
+  (cd "$root_dir" && git status --porcelain --ignore-submodules=dirty) |
   cut -c1-3 |
   sort |
   uniq
