@@ -34,24 +34,8 @@ RPROMPT='$(drench_git_prompt)'
 
 # local time, color coded by last return code
 
-function drench_is_git_repo() {
-  git rev-parse --is-inside-git-dir 2> /dev/null > /dev/null
-}
-
-function drench_git_dir() {
-  if [ $(git rev-parse --is-inside-git-dir) = "true" ]; then
-    echo ${$(git rev-parse --git-dir)%.git}
-  else
-    git rev-parse --show-toplevel || echo "."
-  fi
-}
-
-function drench_grt() {
-  drench_is_git_repo && cd "$(drench_git_dir)"
-}
-
 raw_git_statuses() {
-  (drench_grt && git status --porcelain --ignore-submodules=dirty) |
+  (grt && git status --porcelain --ignore-submodules=dirty) |
   cut -c1-3 |
   sort |
   uniq
