@@ -25,16 +25,29 @@ function work_in_progress() {
   fi
 }
 
-function is_git_repo() {
-  git rev-parse --is-inside-git-dir 2> /dev/null > /dev/null
-}
+# Get the default 'main' branch: from origin, from local branches, or else just 'master'
+function git_main_branch() {
+  # Get default branch from the origin remote
+  local branch
+  branch="${$(command git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null)#refs/remotes/origin/}"
 
-function git_dir() {
-  if [ $(git rev-parse --is-inside-git-dir) = "true" ]; then
-    echo ${$(git rev-parse --git-dir)%.git}
-  else
-    git rev-parse --show-toplevel || echo "."
+  if [[ -n "$branch" ]]; then
+    echo "$branch"
+    return
   fi
+
+  # Look up list of local branches and return the first one that exists
+  local -a branches
+  branches=(${(@f)"$(command git for-each-ref --format='%(refname:short)' refs/heads 2>/dev/null)"})
+  for branch in master main; do
+    if (( ${branches[(Ie)$branch]} )); then
+      echo "$branch"
+      return
+    fi
+  done
+
+  echo master
+  return 1
 }
 
 #
@@ -55,7 +68,7 @@ alias gapt='git apply --3way'
 alias gb='git branch'
 alias gba='git branch -a'
 alias gbd='git branch -d'
-alias gbda='git branch --no-color --merged | command grep -vE "^(\+|\*|\s*(master|development|develop|devel|dev)\s*$)" | command xargs -n 1 git branch -d'
+alias gbda='git branch --no-color --merged | command grep -vE "^(\+|\*|\s*($(git_main_branch)|development|develop|devel|dev)\s*$)" | command xargs -n 1 git branch -d'
 alias gbD='git branch -D'
 alias gbl='git blame -b -w'
 alias gbnm='git branch --no-merged'
@@ -80,7 +93,7 @@ alias gcf='git config --list'
 alias gcl='git clone --recurse-submodules'
 alias gclean='git clean -id'
 alias gpristine='git reset --hard && git clean -dffx'
-alias gcm='git checkout master'
+alias gcm='git checkout $(git_main_branch)'
 alias gcd='git checkout develop'
 alias gcmsg='git commit -m'
 alias gco='git checkout'
@@ -172,7 +185,7 @@ alias ghh='git help'
 
 alias gignore='git update-index --assume-unchanged'
 alias gignored='git ls-files -v | grep "^[[:lower:]]"'
-alias git-svn-dcommit-push='git svn dcommit && git push github master:svntrunk'
+alias git-svn-dcommit-push='git svn dcommit && git push github $(git_main_branch):svntrunk'
 
 alias gk='\gitk --all --branches'
 alias gke='\gitk --all $(git log -g --pretty=%h)'
@@ -194,10 +207,10 @@ alias gloga='git log --oneline --decorate --graph --all'
 alias glp="_git_log_prettily"
 
 alias gm='git merge'
-alias gmom='git merge origin/master'
+alias gmom='git merge origin/$(git_main_branch)'
 alias gmt='git mergetool --no-prompt'
 alias gmtvim='git mergetool --no-prompt --tool=vimdiff'
-alias gmum='git merge upstream/master'
+alias gmum='git merge upstream/$(git_main_branch)'
 alias gma='git merge --abort'
 
 alias gp='git push'
@@ -215,7 +228,7 @@ alias grba='git rebase --abort'
 alias grbc='git rebase --continue'
 alias grbd='git rebase develop'
 alias grbi='git rebase -i'
-alias grbm='git rebase master'
+alias grbm='git rebase $(git_main_branch)'
 alias grbs='git rebase --skip'
 alias grev='git revert'
 alias grh='git reset'
@@ -271,7 +284,7 @@ alias gup='git pull --rebase'
 alias gupv='git pull --rebase -v'
 alias gupa='git pull --rebase --autostash'
 alias gupav='git pull --rebase --autostash -v'
-alias glum='git pull upstream master'
+alias glum='git pull upstream $(git_main_branch)'
 
 alias gwch='git whatchanged -p --abbrev-commit --pretty=medium'
 alias gwip='git add -A; git rm $(git ls-files --deleted) 2> /dev/null; git commit --no-verify --no-gpg-sign -m "--wip-- [skip ci]"'
