@@ -35,7 +35,7 @@ RPROMPT='$(drench_git_prompt)'
 # local time, color coded by last return code
 
 raw_git_statuses() {
-  root_dir=$(git_root_dir)
+  root_dir=${$(git rev-parse --absolute-git-dir)%.git}
   test $? -eq 0 || return
   (cd "$root_dir" && git status --porcelain --ignore-submodules=dirty) |
   cut -c1-3 |
