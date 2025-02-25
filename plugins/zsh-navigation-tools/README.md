@@ -185,7 +185,7 @@ Result is stored as `$reply[REPLY]` (`$` isn't needed before `REPLY` because
 of arithmetic context inside `[]`). The returned array might be different from
 input arguments as `n-list` can process them via incremental search or uniq
 mode. `$REPLY` is the index in that possibly processed array. If `$REPLY`
-equals `-1` it means that no selection have been made (user quitted via `q`
+equals `-1` it means that no selection have been made (user quit via `q`
 key).
 
 To set up entries that can be jumped to with `[`,`]` keys add their indices to
@@ -226,7 +226,7 @@ Zsh plugins may look scary, as they seem to have some "architecture". In fact, w
 1. It has its directory added to `fpath`
 2. It has any first `*.plugin.zsh` file sourced
 
-That's it. When one contributes to Oh-My-Zsh or creates a plugin for any plugin manager, he only needs to account for this.
+That's it. When one contributes to Oh-My-Zsh or creates a plugin for any plugin manager, they only need to account for this.
 The same with doing any non-typical Zsh Navigation Tools installation.
 
 ## More
